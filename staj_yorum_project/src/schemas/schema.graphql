@@ -1,0 +1,78 @@
+type User {
+  id: ID!
+  name: String!
+  lastName: String!
+  email: String!
+  password: String!
+}
+
+type Company {
+  id: ID!
+  name: String!
+  averageRating: Float!
+  reviews: [Review!]!
+  sector: String!
+  employees: Int!
+  startingYear: Int!
+  workingDays: Int!
+  links: [String!]!
+  address: String!
+}
+
+type Review {
+  id: ID!
+  content: String!
+  rating: Int!
+  author: User!
+  company: Company!
+  position: String! # Stajyer, Junior Developer vs.
+  startDate: String!
+  endDate: String!
+  technologies: [String!]!
+  ratings: ReviewRatings!
+  privacy: ReviewPrivacy!
+}
+
+type ReviewRatings {
+  officeEnvironment: Int!
+  educationSupport: Int!
+  salaryBenefits: Int!
+}
+
+enum ReviewPrivacy {
+  ANONYMOUS
+  USERNAME_VISIBLE
+  FULL_NAME_VISIBLE
+}
+
+type Query {
+  getCompanies: [Company!]!
+  getCompany(id: ID!): Company
+  getReviews(companyId: ID!): [Review!]!
+}
+
+type Mutation {
+  registerUser(name: String!, email: String!, password: String!): String! # JWT döner
+  loginUser(email: String!, password: String!): String! # JWT döner
+  addReview(
+    companyId: ID!
+    content: String!
+    rating: Int!
+    position: String!
+    startDate: String!
+    endDate: String!
+    technologies: [String!]!
+    ratings: ReviewRatingsInput!
+    privacy: ReviewPrivacy!
+  ): Review!
+}
+
+input ReviewRatingsInput {
+  officeEnvironment: Int!
+  educationSupport: Int!
+  salaryBenefits: Int!
+}
+
+type Subscription {
+  reviewAdded: Review!
+}
